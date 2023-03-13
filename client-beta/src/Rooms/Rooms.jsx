@@ -66,7 +66,7 @@ const _ar = {
     text_addTenant: "اضافة مستأجر",
 };
 
-const Sample = () => {
+const Rooms = () => {
     const id = useParams().id;
     const [roomsData, setRoomsData] = useState(dataSource);
     const [keyCount, setKeyCount] = useState(roomsData.length + 1);
@@ -148,4 +148,4 @@ const Sample = () => {
     );
 };
 
-export default  Sample;
+export default  Rooms;

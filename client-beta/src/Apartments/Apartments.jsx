@@ -16,7 +16,7 @@ const Apartments = () => {
 
     useEffect( () => {
         const fetchData = async () => {
-            const response = await fetch("http://localhost:3000/general", {
+            const response = await fetch("http://localhost:3000/general/apartments", {
                 method: "GET",
             })
                 .then(res=>res.json())

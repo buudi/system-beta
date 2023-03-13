@@ -29,7 +29,8 @@ create table tenants(
     emirates_id text not null,
     phone_number integer not null,
     email text,
-    assigned_monthly_rent integer not null
+    assigned_monthly_rent integer not null,
+    date_settle_in text
 );
 
 create table rent_payments(
@@ -57,6 +58,8 @@ create table monthly_reports(
     total_rent_paid integer not null,
     total_expenses integer not null
 );
+
+-- TODO: make the apartment_history table
 
 insert into main_apartments (building_name, apt_number, total_rooms)
 values ('الاتحاد', 602, 5);
