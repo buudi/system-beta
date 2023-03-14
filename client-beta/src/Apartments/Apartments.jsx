@@ -9,11 +9,13 @@ const ApartmentStyles = {
 }
 const Apartments = (props) => {
     const [apartmentsData, setApartmentsData] = useState([]);
-    const [keyCount, setKeyCount] = useState(apartmentsData.length + 1);
+    const [keyCount, setKeyCount] = useState(1);
 
     useEffect(()=>{
+        if (!props.data || !props.data.apartments) return;
+
         const { apartments } = props.data;
-        const newArr = apartments.map(item=>({
+        const apartmentsMapped = apartments.map(item=>({
             key: item.apt_id,
             building: item.building_name,
             apartmentNumber: item.apt_number,
@@ -21,21 +23,26 @@ const Apartments = (props) => {
             revenue: 5000,
             expenses: 2000
         }));
-        setApartmentsData(newArr);
+        setApartmentsData(apartmentsMapped);
+        setKeyCount(apartmentsMapped.length + 1);
     },[props.data.apartments])
 
     const handleAddition = (values) => {
-        setKeyCount(keyCount+1);
-        let temp = [{
-            key:keyCount,
-            building: values.building,
-            apartmentNumber: values.apartmentNumber,
-            rooms: values.rooms,
-            revenue: 5000,
-            expenses: 2000,
-        },];
-        setApartmentsData(apartmentsData.concat(temp));
+        setApartmentsData(prevApartmentsData => [
+            ...prevApartmentsData,
+            {
+                key: keyCount,
+                building: values.building,
+                apartmentNumber: values.apartmentNumber,
+                rooms: values.rooms,
+                revenue: 5000,
+                expenses: 2000
+            }
+        ]);
+
+        setKeyCount(prevKeyCount => prevKeyCount + 1);
     };
+
     const handleCheckConsole = () => {
         console.log(apartmentsData);
     }
