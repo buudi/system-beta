@@ -18,6 +18,7 @@ const Apartments = (props) => {
         const apartmentsMapped = apartments.map(item=>({
             key: item.apt_id,
             building: item.building_name,
+            serialNumber: item.apt_id,
             apartmentNumber: item.apt_number,
             rooms: item.total_rooms,
             revenue: 5000,

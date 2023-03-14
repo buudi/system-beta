@@ -3,10 +3,17 @@ import {useNavigate} from "react-router-dom";
 
 const columns = [
     {
+        title: 'الرقم التعريفي',
+        dataIndex: 'serialNumber',
+        key: 'serialNumber',
+        width: '5%',
+    },
+    {
         title: 'رقم الشقة',
         dataIndex: 'apartmentNumber',
         key: 'apartmentNumber',
         render: (text) => <a>{text}</a>,
+
     },
     {
         title: 'اسم البناية',
@@ -34,9 +41,7 @@ const columns = [
 const ApartmentsTable = (props) => {
     const navigate = useNavigate();
     const handleRowClick = (record, index) => {
-        navigate(`/apartments/${record.building}`);
-        // console.log(index + 1);
-        // console.log(record.building);
+        navigate(`/apartments/${record.serialNumber}`);
     }
 
     const tableProps = {
