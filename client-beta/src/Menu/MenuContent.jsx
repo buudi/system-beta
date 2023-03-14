@@ -33,7 +33,7 @@ const MenuContent = () => {
                 <Route path="/" element={<Apartments data={data} />} />
                 <Route path="/rooms" element={<Dashboard />} />
                 <Route path="/apartments" element={<Landing />} />
-                <Route path="/apartments/:id" element={<Rooms />} />
+                <Route path="/apartments/:id" element={<Rooms data={data}/>} />
                 <Route path="/tenants" element={"Profile"} />
             </Routes>
         </div>

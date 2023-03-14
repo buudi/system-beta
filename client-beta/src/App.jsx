@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import MenuContent from "./Menu/MenuContent.jsx";
 import { menuItems } from "./Menu/menuItems.js";
 
-const handleClick = (key) => {
+const handleClick = (key, navigate) => {
     if (key !== "signOut") {
         navigate(key);
     }
