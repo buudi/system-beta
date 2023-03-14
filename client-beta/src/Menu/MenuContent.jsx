@@ -7,8 +7,6 @@ import Dashboard from "../Dashboard/Dashboard.jsx";
 import Apartments from "../Apartments/Apartments.jsx";
 
 const MenuContent = () => {
-
-
     const [data, setData] = useState({ apartments: [], rooms: [], tenants: [] });
 
     useEffect(() => {
@@ -32,7 +30,7 @@ const MenuContent = () => {
     return (
         <div>
             <Routes>
-                <Route path="/" element={<Apartments />} />
+                <Route path="/" element={<Apartments data={data} />} />
                 <Route path="/rooms" element={<Dashboard />} />
                 <Route path="/apartments" element={<Landing />} />
                 <Route path="/apartments/:id" element={<Rooms />} />
