@@ -10,7 +10,7 @@ router.get('/apartments', async (req, res)=>{
         if(rows.length > 0) {
             res.json(rows);
         }else {
-            console.log("There is no entry!");
+            console.log("There is no entry in /apartments");
         }
     } catch (err) {
         console.log(err.message);
@@ -24,7 +24,7 @@ router.get('/tenants', async (req, res) => {
         if(rows.length > 0) {
             res.json(rows);
         } else {
-            console.log('There is no entry!')
+            console.log('There is no entry in /tenants')
         }
     } catch (err) {
         console.log(err.message);
@@ -37,7 +37,7 @@ router.get('/rooms', async (req, res) => {
         if(rows.length > 0) {
             res.json(rows);
         } else {
-            console.log('There is no entry!')
+            console.log('There is no entry in /rooms')
         }
     } catch (err) {
         console.log(err.message);
@@ -50,7 +50,7 @@ router.get('/rentPayments', async (req, res) => {
         if(rows.length > 0) {
             res.json(rows);
         } else {
-            console.log('There is no entry!')
+            console.log('There is no entry in /rentPayments')
         }
     } catch (err) {
         console.log(err.message);
@@ -63,11 +63,24 @@ router.get('/expenses', async (req, res) => {
         if(rows.length > 0) {
             res.json(rows);
         } else {
-            console.log('There is no entry!')
+            console.log('There is no entry in /expenses');
         }
     } catch (err) {
         console.log(err.message);
     }
 });
+
+router.get('/contracts', async(req, res) => {
+    try{
+        const { rows } = await db.query('select * from contracts');
+        if (rows.length > 0 ) {
+            res.json(rows);
+        } else {
+            console.log('There is no entry in /contracts');
+        }
+    } catch (err) {
+        console.log(err.message);
+    }
+})
 
 

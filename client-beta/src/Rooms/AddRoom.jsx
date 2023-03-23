@@ -156,7 +156,7 @@ const AddRoom = (props) => {
 
                     <Form.Item
                         label= {_ar1.contractStart}
-                        name="contractStart"
+                        name="settleIn"
                         rules={[
                             {
                                 required: true,

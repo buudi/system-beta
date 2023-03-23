@@ -82,34 +82,38 @@ for (let i = 0; i < 100; i++) {
 const Dashboard = () => {
     const [fixedTop, setFixedTop] = useState(false);
     return (
-        <Table
-            columns={columns}
-            dataSource={data}
-            scroll={{
-                x: 1500,
-            }}
-            summary={() => (
-                <Table.Summary fixed={fixedTop ? 'top' : 'bottom'}>
-                    <Table.Summary.Row>
-                        <Table.Summary.Cell index={0} colSpan={2}>
-                            <Switch
-                                checkedChildren="Fixed Top"
-                                unCheckedChildren="Fixed Top"
-                                checked={fixedTop}
-                                onChange={() => {
-                                    setFixedTop(!fixedTop);
-                                }}
-                            />
-                        </Table.Summary.Cell>
-                        <Table.Summary.Cell index={2} colSpan={8}>
-                            Scroll Context
-                        </Table.Summary.Cell>
-                        <Table.Summary.Cell index={10}>Fix Right</Table.Summary.Cell>
-                    </Table.Summary.Row>
-                </Table.Summary>
-            )}
-            sticky
-        />
+        <div style={{width:1200,}}>
+            <Table
+                columns={columns}
+                dataSource={data}
+                scroll={{
+                    x: 1500,
+                    y:400
+                }}
+                summary={() => (
+                    <Table.Summary fixed={fixedTop ? 'top' : 'bottom'}>
+                        <Table.Summary.Row>
+                            <Table.Summary.Cell index={0} colSpan={2}>
+                                <Switch
+                                    checkedChildren="Fixed Top"
+                                    unCheckedChildren="Fixed Top"
+                                    checked={fixedTop}
+                                    onChange={() => {
+                                        setFixedTop(!fixedTop);
+                                    }}
+                                />
+                            </Table.Summary.Cell>
+                            <Table.Summary.Cell index={2} colSpan={8}>
+                                Scroll Context
+                            </Table.Summary.Cell>
+                            <Table.Summary.Cell index={10}>Fix Right</Table.Summary.Cell>
+                        </Table.Summary.Row>
+                    </Table.Summary>
+                )}
+                sticky
+            />
+        </div>
+
     );
 };
 export default Dashboard;

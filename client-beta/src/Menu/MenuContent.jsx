@@ -11,8 +11,13 @@ const MenuContent = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const { apartmentsResponse, roomsResponse, tenantsResponse } = await fetchAllData();
-            setData({ apartments: apartmentsResponse, rooms: roomsResponse, tenants: tenantsResponse });
+            const { apartmentsResponse, roomsResponse, tenantsResponse, contractsResponse } = await fetchAllData();
+            setData({
+                apartments: apartmentsResponse,
+                rooms: roomsResponse,
+                tenants: tenantsResponse,
+                contracts: contractsResponse
+            });
         };
 
         fetchData();

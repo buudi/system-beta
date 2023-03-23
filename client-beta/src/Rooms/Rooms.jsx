@@ -9,51 +9,42 @@ const columns = [
         title: "رقم الغرفة",
         dataIndex: "roomNumber",
         key: "roomNumber",
-        width: '15%',
     },
     {
         title: "اسم المستأجر",
         dataIndex: "tenantName",
         key: "tenantName",
-        width: '15%',
-
     },
 
     {
         title: "رقم الهاتف",
         dataIndex: "tenantNumber",
         key: "tenantNumber",
-        width: '15%',
-
-
     },
     {
         title: "رقم الهوية",
         dataIndex: "tenantEID",
         key: "tenantEID",
-        width: '15%',
-
     },
     {
         title: "الإيجار (درهم)",
         dataIndex: "rent",
         key: "rent",
-        width: '15',
-
     },
     {
-        title: "بداية العقد",
+        title: "تاريخ السكن",
+        dataIndex: "settleIn",
+        key: "settleIn",
+    },
+    {
+        title: "العقد الحالي",
         dataIndex: "contractStart",
         key: "contractStart",
-        width: '15%',
-
     },
     {
         title: "نهاية العقد (استحقاق)",
         dataIndex: "contractEnd",
         key: "contractEnd",
-        width: '10%',
-
     },
 ];
 
@@ -81,7 +72,7 @@ const Rooms = (props) => {
                 tenantNumber: values.tenantNumber,
                 tenantEID: values.tenantEID,
                 rent: values.rent,
-                contractStart: values.contractStart,
+                settleIn: values.settleIn,
                 contractEnd: values.contractEnd,
             },
         ];
@@ -102,6 +93,10 @@ const Rooms = (props) => {
         return tenants.filter(tenant => tenant.room_id === roomId);
     };
 
+    const convertDate = (date) => {
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    };
+
     const mapTenantToPreviewData = (roomNumber, tenant) => {
         return {
             key: tenant.room_id,
@@ -109,11 +104,10 @@ const Rooms = (props) => {
             tenantName: tenant.name,
             tenantNumber: tenant.phone_number,
             tenantEID: tenant.emirates_id,
-            rent: tenant.assigned_monthly_rent,
-            contractStart: tenant.date_settle_in,
-
-            // TODO: figure out the contractEnd
-            contractEnd: "04_2023",
+            rent: 2000,
+            settleIn: "2023-03-23",
+            contractStart: "2023-03-23",
+            contractEnd: "2023-04-23",
         };
     };
     useEffect(()=>{
@@ -141,34 +135,6 @@ const Rooms = (props) => {
         setRoomsData(dataToPreview);
         setAptTitle(`شقة ${apartment.building_name} ${apartment.apt_number}`);
     },[props.data]);
-
-    // const handleClick = () => {
-    //     const { rooms, tenants, apartments } = props.data;
-    //
-    //     const apartment = findApartmentById(apartments, id);
-    //
-    //     if (!apartment) {
-    //         console.log("apartment not found!!");
-    //         return;
-    //     }
-    //
-    //     const selectedRooms = filterRoomsByApartmentId(rooms, id);
-    //
-    //     const selectedTenants = selectedRooms.reduce((result, room) => {
-    //         const tenantsInRoom = filterTenantsByRoomId(tenants, room.room_id);
-    //         return [...result, ...tenantsInRoom];
-    //     }, []);
-    //
-    //     const dataToPreview = selectedTenants.map(tenant => {
-    //         const room = selectedRooms.find(room => room.room_id === tenant.room_id);
-    //         return mapTenantToPreviewData(room.room_number, tenant);
-    //     });
-    //
-    //     setRoomsData(dataToPreview);
-    //     setAptTitle(`شقة ${apartment.building_name} ${apartment.apt_number}`);
-    // };
-
-    // END
 
     const _titleH1 = aptTitle;
     return (
