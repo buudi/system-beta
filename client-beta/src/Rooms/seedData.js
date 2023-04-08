@@ -1,3 +1,5 @@
+// the below are sample data to be used for testing the UI of the Table component, when accessing
+// data from the Database is not possible.
 let dataSource = [
     {
         key: 1,

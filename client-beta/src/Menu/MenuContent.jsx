@@ -7,7 +7,7 @@ import Dashboard from "../Dashboard/Dashboard.jsx";
 import Apartments from "../Apartments/Apartments.jsx";
 
 const MenuContent = () => {
-    const [data, setData] = useState({ apartments: [], rooms: [], tenants: [] });
+    const [data, setData] = useState({ apartments: [], rooms: [], tenants: [], contracts: [] });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,12 +23,17 @@ const MenuContent = () => {
         fetchData();
     }, []);
 
+
+
+
     useEffect(() => {
-        const { apartments, rooms, tenants } = data;
-        if (apartments.length && rooms.length && tenants.length) {
-            console.log(apartments);
-            console.log(rooms);
-            console.log(tenants);
+        const { apartments, rooms, tenants, contracts } = data;
+        if (apartments.length && rooms.length && tenants.length && contracts.length) {
+            console.log("Fresh Data Straight from the DB")
+            console.log("Apartments: ", apartments);
+            console.log("Rooms: ", rooms);
+            console.log("Tenants: ", tenants);
+            // console.log("Contracts: ", contracts);
         }
     }, [data]);
 

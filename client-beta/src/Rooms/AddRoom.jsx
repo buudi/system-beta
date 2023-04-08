@@ -1,9 +1,25 @@
-import {useState} from "react";
-import {Button, Form, Input, Modal} from "antd";
-
+import React, {useState, useEffect} from "react";
+import {Button, Form, Input, Modal, Select} from "antd";
 
 const AddRoom = (props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [vacantRooms, setVacantRooms] = useState([]);
+
+    useEffect(() => {
+
+        // the below code filters room based on whether they're vacant, however
+        // there is still no useful case where we need to use vacantRooms
+        if(props.selectedAptRooms.length != 0){
+            const filteredRooms = props.selectedAptRooms.filter(room => room.vacant === true);
+            setVacantRooms(filteredRooms);
+        }
+    },[props.selectedAptRooms]);
+
+    // the below useEffect is just for testing, you can remove it later if you wish
+    useEffect(()=>{
+        // console.log("from the useEffect, ", vacantRooms);
+    },[vacantRooms])
+
     const showModal = () => {
         setIsModalOpen(true);
     }
@@ -13,6 +29,19 @@ const AddRoom = (props) => {
     const handleCancel = () => {
         setIsModalOpen(false);
     }
+    const handleChange = (value, option) => {
+        if (option.disabled){
+            alert("DON'T!!!");
+        }
+        console.log(`selected ${value}`);
+    };
+
+    // const handleSelect = (value, option) => {
+    //     if (option.disabled){
+    //         alert("DON'T!!!");
+    //     }
+    //     console.log(`selected ${value}`);
+    // };
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -33,7 +62,8 @@ const AddRoom = (props) => {
         ButtonText: "اضافة مستأجر",
         ModalTitleText: "اضافة مستأجر في بناية الاندلس",
         cancelText: "إلغاء",
-        roomNumber: "رقم الغرفة",
+        roomNumber: "اختر رمز الغرفة",
+        roomNumber2: "او ادخل  رمز الغرفة يدوياً",
         tenantName: "اسم المستأجر",
         tenantNumber: "رقم هاتف المستأجر",
         tenantEID: "رقم الهوية",
@@ -54,6 +84,8 @@ const AddRoom = (props) => {
         addressMsgText: 'الرجاء إدخال العنوان!',
         addBtnText: "إضافة",
     }
+
+
     return (
         <div
             className="addRoom"
@@ -65,9 +97,10 @@ const AddRoom = (props) => {
             <Modal
                 title={_ar1.ModalTitleText}
                 open={isModalOpen}
-                onCancel={handleCancel}
+                onCancel={handleCancel} // for the X button on top
                 maskClosable={false}
                 footer={[
+                    // the الغاء button at the bottom
                     <Button key="cancel" onClick={handleCancel}>{_ar1.cancelText}</Button>
                 ]}
             >
@@ -89,17 +122,38 @@ const AddRoom = (props) => {
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
+
                     <Form.Item
                         label={_ar1.roomNumber}
-                        name="roomNumber"
-                        rules={[
-                            {
-                                required: true,
-                                message: arText.buildingMsgText,
-                            },
-                        ]}
+                        name={"roomNumber"}
+                        rules={[{
+                            required: true,
+                            message: arText.buildingMsgText,
+                        }]}
+
                     >
-                        <Input />
+                        <Select
+                            // defaultValue="lucy"
+                            style={{ width: 120 }}
+                            onChange={handleChange}
+                            // onSelect={handleSelect}
+
+                            options={props.selectedAptRooms.map(room => ( room.vacant ? (
+                                    {
+                                        value: room.room_number,
+                                        label: room.room_number,
+                                    }
+                                ) : (
+                                    {
+                                        value:room.room_number,
+                                        label: room.room_number,
+                                        disabled: true,
+                                        title: "Dont just dont!!"
+                                    }
+                                )
+                                )
+                            )}
+                        />
                     </Form.Item>
 
                     <Form.Item
@@ -192,6 +246,7 @@ const AddRoom = (props) => {
                     </Form.Item>
                 </Form>
             </Modal>
+            <Button onClick={() => console.log("vacant",vacantRooms)}>check console</Button>
         </div>
     );
 }

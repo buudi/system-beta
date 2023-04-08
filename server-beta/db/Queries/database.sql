@@ -89,3 +89,13 @@ ALTER TABLE tenants DROP COLUMN  assigned_monthly_rent;
 ALTER TABLE contracts ADD COLUMN current_contract BOOLEAN;
 ALTER TABLE contracts ALTER COLUMN current_contract SET NOT NULL;
 
+ALTER TABLE contracts
+    RENAME COLUMN current_contract TO active;
+
+ALTER TABLE tenants
+    ADD COLUMN apt_id INTEGER references main_apartments(apt_id);
+
+ALTER TABLE rooms
+    ADD COLUMN vacant BOOLEAN;
+ALTER TABLE rooms
+    DROP COLUMN vacant;

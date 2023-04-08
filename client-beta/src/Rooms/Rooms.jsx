@@ -57,26 +57,39 @@ const Rooms = (props) => {
     const id = useParams().id;
 
     const [roomsData, setRoomsData] = useState([]);
+    const [selectedAptRooms, setSelectedAptRooms] = useState([]);
     const [keyCount, setKeyCount] = useState(1);
     const [aptTitle, setAptTitle] = useState(`شقة ${id}`);
 
 
     // TODO: remake the handleAddition to add tenant to the database
-    const handleAddition = (values) => {
-        setKeyCount(keyCount+1);
-        let temp = [
-            {
-                key:keyCount, // to be removed
-                roomNumber: values.roomNumber,
-                tenantName: values.tenantName,
-                tenantNumber: values.tenantNumber,
-                tenantEID: values.tenantEID,
-                rent: values.rent,
-                settleIn: values.settleIn,
-                contractEnd: values.contractEnd,
+
+    const postData = async (data) => {
+        const response = await fetch("http://localhost:3000/tenant/addTenant",{
+            method: "POST",
+            mode: "cors",
+            headers:{
+                "Content-Type":"application/json"
             },
-        ];
-        setRoomsData(roomsData.concat(temp));
+            body: JSON.stringify(data)
+        });
+        console.log(response.json());
+        setKeyCount(keyCount+1);
+    }
+    const handleAddition = (values) => {
+        let temp = {
+            aptId: id,
+            roomNumber: values.roomNumber,
+            tenantName: values.tenantName,
+            tenantEID: values.tenantEID,
+            tenantNumber: parseInt(values.tenantNumber),
+            rent: parseInt(values.rent),
+            settleIn: values.settleIn,
+            contractEnd: values.contractEnd,
+        };
+        // setRoomsData(roomsData.concat(temp));
+        postData(temp);
+
     };
 
 
@@ -94,47 +107,56 @@ const Rooms = (props) => {
     };
 
     const convertDate = (date) => {
+        date = new Date(date);
         return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     };
 
-    const mapTenantToPreviewData = (roomNumber, tenant) => {
+    const mapTenantToPreviewData = (roomNumber, tenant, contract) => {
         return {
-            key: tenant.room_id,
+            key: tenant.room_id, // since multiple tenants can have the same room_id this won't work anymore
             roomNumber: roomNumber,
             tenantName: tenant.name,
             tenantNumber: tenant.phone_number,
             tenantEID: tenant.emirates_id,
-            rent: 2000,
-            settleIn: "2023-03-23",
-            contractStart: "2023-03-23",
-            contractEnd: "2023-04-23",
+            rent: parseInt(contract.rent),
+            settleIn: convertDate(tenant.date_settle_in),
+            contractStart: convertDate(contract.contract_start) ,
+            contractEnd: convertDate(contract.contract_end) ,
         };
     };
-    useEffect(()=>{
-        const { rooms, tenants, apartments } = props.data;
+    useEffect( ()=>{
+        const { rooms, tenants, apartments, contracts } =  props.data;
 
-        const apartment = findApartmentById(apartments, id);
+        const apartment =  findApartmentById(apartments, id);
 
+
+        // do not remove! the below if statement is essential
         if (!apartment) {
-            console.log("apartment not found!!");
+            // console.log("apartment not found!!");
+            // until apartment is filled with a value, the if statement will return outside, the useEffect
+            //  will update itself once apartments data has been successfully fetched.
             return;
         }
 
         const selectedRooms = filterRoomsByApartmentId(rooms, id);
+        setSelectedAptRooms(selectedRooms);
 
-        const selectedTenants = selectedRooms.reduce((result, room) => {
-            const tenantsInRoom = filterTenantsByRoomId(tenants, room.room_id);
-            return [...result, ...tenantsInRoom];
-        }, []);
+        const selectedTenants = tenants.filter(tenant => tenant.apt_id === parseInt(id));
+        const selectTheContract = (tenant_id) => {
+            return contracts.filter(contract => contract.active && contract.tenant_id === tenant_id );
+        }
+
+        // console.log("look here:", selectTheContract("e2f068f7-c490-4e66-9984-ebf51254630a") );
 
         const dataToPreview = selectedTenants.map(tenant => {
             const room = selectedRooms.find(room => room.room_id === tenant.room_id);
-            return mapTenantToPreviewData(room.room_number, tenant);
+            const selectedContract = selectTheContract(tenant.tenant_id);
+            return mapTenantToPreviewData(room.room_number, tenant, selectedContract[0]);
         });
 
         setRoomsData(dataToPreview);
         setAptTitle(`شقة ${apartment.building_name} ${apartment.apt_number}`);
-    },[props.data]);
+    },[props.data, keyCount]);
 
     const _titleH1 = aptTitle;
     return (
@@ -152,7 +174,7 @@ const Rooms = (props) => {
             />
 
             <h1 style={{display:"flex", flexDirection: "row-reverse"}}>{_titleH1}</h1>
-            <AddRoom handleAddition={handleAddition}/>
+            <AddRoom handleAddition={handleAddition} selectedAptRooms={selectedAptRooms}/>
             {/*<Button onClick={handleClick}>Check Console</Button>*/}
             <Table  dataSource={roomsData} columns={columns}/>
 
