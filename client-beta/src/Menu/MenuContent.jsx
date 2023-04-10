@@ -8,6 +8,7 @@ import Apartments from "../Apartments/Apartments.jsx";
 
 const MenuContent = () => {
     const [data, setData] = useState({ apartments: [], rooms: [], tenants: [], contracts: [] });
+    const [update, setUpdate] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,7 +22,8 @@ const MenuContent = () => {
         };
 
         fetchData();
-    }, []);
+        console.log("fetched just now");
+    }, [update]);
 
 
 
@@ -43,7 +45,7 @@ const MenuContent = () => {
                 <Route path="/" element={<Apartments data={data} />} />
                 <Route path="/rooms" element={<Dashboard />} />
                 <Route path="/apartments" element={<Landing />} />
-                <Route path="/apartments/:id" element={<Rooms data={data}/>} />
+                <Route path="/apartments/:id" element={<Rooms data={data} update={update} setUpdate={setUpdate}/>} />
                 <Route path="/tenants" element={"Profile"} />
             </Routes>
         </div>

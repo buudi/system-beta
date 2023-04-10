@@ -99,3 +99,7 @@ ALTER TABLE rooms
     ADD COLUMN vacant BOOLEAN;
 ALTER TABLE rooms
     DROP COLUMN vacant;
+
+delete from tenants where tenant_id = $1;
+delete from contracts where tenant_id = $2;
+update rooms set vacant = true where room_id = $3;

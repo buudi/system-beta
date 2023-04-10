@@ -4,49 +4,8 @@ import AddRoom from "./AddRoom"
 import {useState, useEffect} from "react";
 import {useParams, Link} from "react-router-dom";
 
-const columns = [
-    {
-        title: "رقم الغرفة",
-        dataIndex: "roomNumber",
-        key: "roomNumber",
-    },
-    {
-        title: "اسم المستأجر",
-        dataIndex: "tenantName",
-        key: "tenantName",
-    },
 
-    {
-        title: "رقم الهاتف",
-        dataIndex: "tenantNumber",
-        key: "tenantNumber",
-    },
-    {
-        title: "رقم الهوية",
-        dataIndex: "tenantEID",
-        key: "tenantEID",
-    },
-    {
-        title: "الإيجار (درهم)",
-        dataIndex: "rent",
-        key: "rent",
-    },
-    {
-        title: "تاريخ السكن",
-        dataIndex: "settleIn",
-        key: "settleIn",
-    },
-    {
-        title: "العقد الحالي",
-        dataIndex: "contractStart",
-        key: "contractStart",
-    },
-    {
-        title: "نهاية العقد (استحقاق)",
-        dataIndex: "contractEnd",
-        key: "contractEnd",
-    },
-];
+
 
 const _style_sampleComp = {
     margin: 50,
@@ -62,9 +21,58 @@ const Rooms = (props) => {
     const [aptTitle, setAptTitle] = useState(`شقة ${id}`);
 
 
-    // TODO: remake the handleAddition to add tenant to the database
+    const columns = [
+        {
+            title: "رقم الغرفة",
+            dataIndex: "roomNumber",
+            key: "roomNumber",
+        },
+        {
+            title: "اسم المستأجر",
+            dataIndex: "tenantName",
+            key: "tenantName",
+        },
 
-    const postData = async (data) => {
+        {
+            title: "رقم الهاتف",
+            dataIndex: "tenantNumber",
+            key: "tenantNumber",
+        },
+        {
+            title: "رقم الهوية",
+            dataIndex: "tenantEID",
+            key: "tenantEID",
+        },
+        {
+            title: "الإيجار (درهم)",
+            dataIndex: "rent",
+            key: "rent",
+        },
+        {
+            title: "تاريخ السكن",
+            dataIndex: "settleIn",
+            key: "settleIn",
+        },
+        {
+            title: "العقد الحالي",
+            dataIndex: "contractStart",
+            key: "contractStart",
+        },
+        {
+            title: "نهاية العقد (استحقاق)",
+            dataIndex: "contractEnd",
+            key: "contractEnd",
+        },
+        {
+            title: "Actions",
+            key: "action",
+            render:(_,record) => (
+                <Button type={"dashed"} onClick={() => handleRemoveTenant(record.key, record.roomId)}>حذف</Button>
+            )
+        }
+    ];
+
+    const postDataAddTenant = async (data) => {
         const response = await fetch("http://localhost:3000/tenant/addTenant",{
             method: "POST",
             mode: "cors",
@@ -75,6 +83,24 @@ const Rooms = (props) => {
         });
         console.log(response.json());
         setKeyCount(keyCount+1);
+    }
+
+    const handleRemoveTenant = (tenantId, roomId) => {
+        const postDataRemoveTenant = async (data) => {
+            const response = await fetch("http://localhost:3000/tenant/remove",{
+                method: "POST",
+                mode: "cors",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify(data)
+            }).catch(err => console.log("error in postDataRemoveTenant():", err));
+
+            console.log(response.json());
+        }
+        postDataRemoveTenant({tenantId:tenantId, roomId:roomId});
+        props.setUpdate(props.update + 1);
+
     }
     const handleAddition = (values) => {
         let temp = {
@@ -88,8 +114,8 @@ const Rooms = (props) => {
             contractEnd: values.contractEnd,
         };
         // setRoomsData(roomsData.concat(temp));
-        postData(temp);
-
+        postDataAddTenant(temp);
+        props.setUpdate(props.update + 1);
     };
 
 
@@ -113,7 +139,9 @@ const Rooms = (props) => {
 
     const mapTenantToPreviewData = (roomNumber, tenant, contract) => {
         return {
-            key: tenant.room_id, // since multiple tenants can have the same room_id this won't work anymore
+            // key: tenant.room_id, // since multiple tenants can have the same room_id this won't work anymore
+            key: tenant.tenant_id,
+            roomId: tenant.room_id,
             roomNumber: roomNumber,
             tenantName: tenant.name,
             tenantNumber: tenant.phone_number,
