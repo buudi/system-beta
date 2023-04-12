@@ -4,6 +4,7 @@ import {Button, Form, Input, Modal, Select} from "antd";
 const AddRoom = (props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [vacantRooms, setVacantRooms] = useState([]);
+    const [isError, setIsError] = useState(false);
 
     useEffect(() => {
 
@@ -43,10 +44,15 @@ const AddRoom = (props) => {
     //     console.log(`selected ${value}`);
     // };
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         console.log('Success:', values);
-        props.handleAddition(values);
-        handleOK();
+        const handleResponse = await props.handleAddition(values);
+        if (handleResponse.type === "error"){
+            setIsError(true);
+        } else {
+            setIsError(false);
+            handleOK();
+        }
     };
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -104,6 +110,11 @@ const AddRoom = (props) => {
                     <Button key="cancel" onClick={handleCancel}>{_ar1.cancelText}</Button>
                 ]}
             >
+                {
+                    isError && (
+                        <h1> error error error !!! </h1>
+                    )
+                }
                 <Form
                     name="basic"
                     labelCol={{

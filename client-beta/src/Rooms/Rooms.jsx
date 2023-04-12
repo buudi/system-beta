@@ -5,8 +5,6 @@ import {useState, useEffect} from "react";
 import {useParams, Link} from "react-router-dom";
 
 
-
-
 const _style_sampleComp = {
     margin: 50,
     padding: 50
@@ -19,6 +17,7 @@ const Rooms = (props) => {
     const [selectedAptRooms, setSelectedAptRooms] = useState([]);
     const [keyCount, setKeyCount] = useState(1);
     const [aptTitle, setAptTitle] = useState(`شقة ${id}`);
+    const [additionResponse, setAdditionResponse] = useState({});
 
 
     const columns = [
@@ -80,8 +79,12 @@ const Rooms = (props) => {
                 "Content-Type":"application/json"
             },
             body: JSON.stringify(data)
-        });
-        console.log(response.json());
+        })
+            .then(res => (res.json()))
+            // .then(res => console.log("look here", typeof res))
+            // todo: instead of setting state, return the entire res from the function
+            .then(res =>  setAdditionResponse(res));
+
         setKeyCount(keyCount+1);
     }
 
@@ -102,7 +105,7 @@ const Rooms = (props) => {
         props.setUpdate(props.update + 1);
 
     }
-    const handleAddition = (values) => {
+    const handleAddition = async (values) => {
         let temp = {
             aptId: id,
             roomNumber: values.roomNumber,
@@ -113,9 +116,11 @@ const Rooms = (props) => {
             settleIn: values.settleIn,
             contractEnd: values.contractEnd,
         };
-        // setRoomsData(roomsData.concat(temp));
-        postDataAddTenant(temp);
+        // setRoomsData(roomsData.concat(temp));`
+        await postDataAddTenant(temp);
+        console.log("Addition Response", additionResponse);
         props.setUpdate(props.update + 1);
+        return additionResponse;
     };
 
 

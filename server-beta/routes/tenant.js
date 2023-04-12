@@ -32,7 +32,8 @@ router.post('/remove', async (req, res) => {
         await db.query('delete from tenants where tenant_id = $1', [tenantId]);
         await  db.query('update rooms set vacant = $1 where room_id=$2',[true, roomId]);
         res.json({
-            msg: "success",
+            type: "success",
+            msg: "successfully added to database",
             tenantId: tenantId,
             roomId: roomId,
             res: response
@@ -69,6 +70,13 @@ router.post('/addTenant', async(req, res) => {
         let occupied = tenantsData.rows.length;
         if(occupied === capacity){
             console.log("ABORT, CAPACITY  FULL !!");
+            await db.query('update rooms set vacant = $1 where room_id= $2',[false, roomId]);
+            // todo: test the below response
+            res.json({
+                type: "error",
+                msg: "Query Not Allowed: room capacity is full",
+                code: "405-capacity"
+            })
             return;
         }
 
@@ -103,6 +111,13 @@ router.post('/addTenant', async(req, res) => {
         const newContractData = await  db.query('select * from contracts where tenant_id = $1',[newTenantId]);
         res.json({msg:"success"});
     } catch (err) {
+        // todo: test the catch below
+        res.json({
+            type: "error",
+            msg: "catched an error, look at errDetails",
+            code:"400-catch",
+            errDetails: err.toString()
+        });
         console.log("ERROR in tenant/addTenant: ", err);
     }
 })
