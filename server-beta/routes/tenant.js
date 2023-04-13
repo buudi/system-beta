@@ -113,8 +113,8 @@ router.post('/addTenant', async(req, res) => {
             // the verification will return an error in the response body.
             res.json({
                 type: "error",
-                msg: "Query Not Allowed: room capacity is full",
-                code: "405-capacity"
+                code: "405-capacity",
+                msg: "Query Not Allowed: room capacity is full"
             })
             return;
         }
@@ -169,15 +169,15 @@ router.post('/addTenant', async(req, res) => {
             type: "success",
             msg: "Successfully added the records to the database!",
             // todo: need to test if the response produces the logical outcome
-            newTenantData: newTenantId,
-            newContractData: newContractData
+            newTenantData: newTenantData.rows[0],
+            newContractData: newContractData.rows[0]
         });
     } catch (err) {
         // (done): test the catch below
         res.json({
             type: "error",
-            msg: "catched an error, look at error details",
             code:"400-catch",
+            msg: "catched an error in 'tenant/addTenant', look at error details",
             err: err.toString()
         });
         console.log("ERROR in tenant/addTenant: ", err);
