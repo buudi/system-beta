@@ -71,22 +71,35 @@ const Rooms = (props) => {
         }
     ];
 
+    // const postDataAddTenant = async (data) => {
+    //     const response = await fetch("http://localhost:3000/tenant/addTenant",{
+    //         method: "POST",
+    //         mode: "cors",
+    //         headers:{
+    //             "Content-Type":"application/json"
+    //         },
+    //         body: JSON.stringify(data)
+    //     })
+    //         .then(res => res.json())
+    //         // .then(res => console.log("look here", typeof res))
+    //         // todo: instead of setting state, return the entire res from the function
+    //         .then( res =>   setAdditionResponse(res));
+    //     setKeyCount(keyCount+1);
+    // }
+
     const postDataAddTenant = async (data) => {
-        const response = await fetch("http://localhost:3000/tenant/addTenant",{
+        const response = await fetch("http://localhost:3000/tenant/addTenant", {
             method: "POST",
             mode: "cors",
-            headers:{
-                "Content-Type":"application/json"
+            headers: {
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
-        })
-            .then(res => (res.json()))
-            // .then(res => console.log("look here", typeof res))
-            // todo: instead of setting state, return the entire res from the function
-            .then(res =>  setAdditionResponse(res));
+        });
 
-        setKeyCount(keyCount+1);
-    }
+        const responseData = await response.json();
+        return responseData;
+    };
 
     const handleRemoveTenant = (tenantId, roomId) => {
         const postDataRemoveTenant = async (data) => {
@@ -117,10 +130,11 @@ const Rooms = (props) => {
             contractEnd: values.contractEnd,
         };
         // setRoomsData(roomsData.concat(temp));`
-        await postDataAddTenant(temp);
-        console.log("Addition Response", additionResponse);
+        const response = await postDataAddTenant(temp);
+        console.log("response response", response);
+        // console.log("Addition Response", additionResponse);
         props.setUpdate(props.update + 1);
-        return additionResponse;
+        return response;
     };
 
 
